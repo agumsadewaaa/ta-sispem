@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../model/ruangan.dart';
+import '../url.dart';
 
 class RuanganService {
-  static const myUrl = 'https://e16b4ebaa7cf.ngrok.io/api/ruangans';
+  static const myUrl = Url.url + '/api/peminjams/1/transaksis';
 
   static Future<List<Ruangan>> getRuangan() async {
     http.Response response = await http.get(Uri.parse(myUrl));

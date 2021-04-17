@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc.navigation_bloc/navigation_bloc.dart';
 import 'sidebar.dart';
+import 'sidebar_ver.dart';
 
 class SideBarLayout extends StatelessWidget {
   @override
@@ -17,7 +18,7 @@ class SideBarLayout extends StatelessWidget {
                 return navigationState as Widget;
               },
             ),
-            SideBar(),
+            SideBarVer(),
           ],
         ),
       ),

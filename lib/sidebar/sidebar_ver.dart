@@ -6,15 +6,15 @@ import 'package:rxdart/rxdart.dart';
 import 'package:ta_sispem/main.dart';
 
 import '../bloc.navigation_bloc/navigation_bloc.dart';
-import '../sidebar/menu_item.dart';
+import 'menu_item.dart';
 
-class SideBar extends StatefulWidget {
+class SideBarVer extends StatefulWidget {
   @override
-  _SideBarState createState() => _SideBarState();
+  _SideBarStateVer createState() => _SideBarStateVer();
 }
 
-class _SideBarState extends State<SideBar>
-    with SingleTickerProviderStateMixin<SideBar> {
+class _SideBarStateVer extends State<SideBarVer>
+    with SingleTickerProviderStateMixin<SideBarVer> {
   AnimationController _animationController;
   StreamController<bool> isSidebarOpenedStreamController;
   Stream<bool> isSidebarOpenedStream;
@@ -118,7 +118,7 @@ class _SideBarState extends State<SideBar>
                       ),
                       MenuItem(
                         icon: Icons.water_damage,
-                        title: "Ruangan",
+                        title: "List Peminjaman",
                         onTap: () {
                           onIconPressed();
                           BlocProvider.of<NavigationBloc>(context)
@@ -127,20 +127,11 @@ class _SideBarState extends State<SideBar>
                       ),
                       MenuItem(
                         icon: Icons.shopping_basket,
-                        title: "Peminjaman Saya",
+                        title: "Kritik dan Saran",
                         onTap: () {
                           onIconPressed();
                           BlocProvider.of<NavigationBloc>(context)
                               .add(NavigationEvents.PeminjamanClickedEvent);
-                        },
-                      ),
-                      MenuItem(
-                        icon: Icons.note,
-                        title: "Panduan",
-                        onTap: () {
-                          onIconPressed();
-                          BlocProvider.of<NavigationBloc>(context)
-                              .add(NavigationEvents.PanduanClickedEvent);
                         },
                       ),
                       Divider(

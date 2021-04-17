@@ -1,4 +1,6 @@
 import 'package:bloc/bloc.dart';
+import 'package:ta_sispem/pages/kritiksaranpage.dart';
+import 'package:ta_sispem/pages/listpeminjamanpage.dart';
 import 'package:ta_sispem/pages/panduanpage.dart';
 
 import '../pages/ruanganpage.dart';
@@ -11,6 +13,8 @@ enum NavigationEvents {
   RuanganClickedEvent,
   PeminjamanClickedEvent,
   PanduanClickedEvent,
+  ListPinjamClickedEvent,
+  KritikSaranClickedEvent
 }
 
 abstract class NavigationStates {}
@@ -32,6 +36,12 @@ class NavigationBloc extends Bloc<NavigationEvents, NavigationStates> {
         break;
       case NavigationEvents.PanduanClickedEvent:
         yield PanduanPage();
+        break;
+      case NavigationEvents.ListPinjamClickedEvent:
+        yield ListPeminjamanPage();
+        break;
+      case NavigationEvents.KritikSaranClickedEvent:
+        yield KritikSaranPage();
         break;
     }
   }
