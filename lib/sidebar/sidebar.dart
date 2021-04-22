@@ -3,12 +3,18 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:ta_sispem/main.dart';
+import 'package:ta_sispem/blocs/auth_bloc.dart';
+import 'package:ta_sispem/event/auth_event.dart';
+import 'package:ta_sispem/state/auth_state.dart';
 
-import '../bloc.navigation_bloc/navigation_bloc.dart';
+import '../blocs/navigation_bloc.dart';
 import '../sidebar/menu_item.dart';
 
 class SideBar extends StatefulWidget {
+  final AuthBloc authBloc;
+
+  const SideBar({Key key, this.authBloc}) : super(key: key);
+
   @override
   _SideBarState createState() => _SideBarState();
 }
@@ -20,6 +26,8 @@ class _SideBarState extends State<SideBar>
   Stream<bool> isSidebarOpenedStream;
   StreamSink<bool> isSidebarOpenedSink;
   final _animationDuration = const Duration(milliseconds: 500);
+
+  AuthBloc get _authBloc => widget.authBloc;
 
   @override
   void initState() {
@@ -154,18 +162,18 @@ class _SideBarState extends State<SideBar>
                         icon: Icons.settings,
                         title: "Settings",
                       ),
-                      MenuItem(
-                        icon: Icons.exit_to_app,
-                        title: "Logout",
-                        onTap: () {
-                          onIconPressed();
-                          Navigator.pop(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()),
-                          );
-                        },
-                      ),
+                      BlocBuilder<AuthBloc, AuthState>(
+                          cubit: _authBloc,
+                          builder: (context, state) {
+                            return MenuItem(
+                              icon: Icons.exit_to_app,
+                              title: "Logout",
+                              onTap: () {
+                                onIconPressed();
+                                _authBloc.add(LoggedOut());
+                              },
+                            );
+                          }),
                     ],
                   ),
                 ),

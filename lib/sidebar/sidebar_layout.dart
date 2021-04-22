@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ta_sispem/blocs/auth_bloc.dart';
 
-import '../bloc.navigation_bloc/navigation_bloc.dart';
+import '../blocs/navigation_bloc.dart';
 import 'sidebar.dart';
 import 'sidebar_ver.dart';
 
 class SideBarLayout extends StatelessWidget {
+  final AuthBloc authBloc;
+
+  const SideBarLayout({Key key, this.authBloc}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +23,10 @@ class SideBarLayout extends StatelessWidget {
                 return navigationState as Widget;
               },
             ),
-            SideBarVer(),
+            SideBar(
+              authBloc: authBloc,
+            ),
+            // SideBarVer(),
           ],
         ),
       ),

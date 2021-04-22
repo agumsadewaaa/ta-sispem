@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:ta_sispem/main.dart';
+import 'package:ta_sispem/login.dart';
 
-import '../bloc.navigation_bloc/navigation_bloc.dart';
+import '../blocs/navigation_bloc.dart';
 import 'menu_item.dart';
 
 class SideBarVer extends StatefulWidget {
@@ -122,7 +122,7 @@ class _SideBarStateVer extends State<SideBarVer>
                         onTap: () {
                           onIconPressed();
                           BlocProvider.of<NavigationBloc>(context)
-                              .add(NavigationEvents.RuanganClickedEvent);
+                              .add(NavigationEvents.ListPinjamClickedEvent);
                         },
                       ),
                       MenuItem(
@@ -131,7 +131,7 @@ class _SideBarStateVer extends State<SideBarVer>
                         onTap: () {
                           onIconPressed();
                           BlocProvider.of<NavigationBloc>(context)
-                              .add(NavigationEvents.PeminjamanClickedEvent);
+                              .add(NavigationEvents.KritikSaranClickedEvent);
                         },
                       ),
                       Divider(

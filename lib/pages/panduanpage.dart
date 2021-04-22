@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../bloc.navigation_bloc/navigation_bloc.dart';
+import '../blocs/navigation_bloc.dart';
 
 class PanduanPage extends StatelessWidget with NavigationStates {
   @override

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ta_sispem/model/ruangan.dart';
 import 'package:ta_sispem/services/servicesruangan.dart';
+import 'addtransaksi.dart';
 
-import '../bloc.navigation_bloc/navigation_bloc.dart';
+import '../blocs/navigation_bloc.dart';
 
 class RuanganPage extends StatefulWidget with NavigationStates {
   @override
@@ -25,90 +26,95 @@ class RuanganPageState extends State<RuanganPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
-      scrollDirection: Axis.vertical,
-      child: Column(
-        children: [
-          Text("Semua Ruangan"),
-          SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Center(
-                  child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: DataTable(
-                        columns: [
-                          DataColumn(
-                            label: Text("#",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w200, fontSize: 12)),
-                          ),
-                          DataColumn(
-                            label: Text("Ruangan",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w200, fontSize: 12)),
-                          ),
-                          DataColumn(
-                            label: Text("Kapasitas",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w200, fontSize: 12)),
-                          ),
-                          DataColumn(
-                            label: Text("Penjaga",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w200, fontSize: 12)),
-                          ),
-                          DataColumn(
-                            label: Text("Kontak",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w200, fontSize: 12)),
-                          ),
-                          DataColumn(
-                            label: Text("Status",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w200, fontSize: 12)),
-                          ),
-                          DataColumn(
-                            label: Text("Aksi",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w200, fontSize: 12)),
-                          ),
-                        ],
-                        rows: _ruangan
-                            .map(
-                              (ruangan) => DataRow(
-                                cells: [
-                                  DataCell(
-                                    Text(ruangan.id.toString()),
-                                  ),
-                                  DataCell(
-                                    Text(ruangan.namaRuangan),
-                                  ),
-                                  DataCell(
-                                    Text(ruangan.kapasitas.toString()),
-                                  ),
-                                  DataCell(
-                                    Text(ruangan.namaPenjaga),
-                                  ),
-                                  DataCell(
-                                    Text(ruangan.kontak),
-                                  ),
-                                  DataCell(
-                                    Text(ruangan.status.toString()),
-                                  ),
-                                  ruangan.status.toString() == 'Tersedia'
-                                      ? DataCell(
-                                          Text("Pinjam"),
-                                        )
-                                      : DataCell(
-                                          Text("Lihat"),
-                                        ),
-                                ],
-                              ),
-                            )
-                            .toList(),
-                      )))),
-        ],
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: [
+            Text(
+              "Semua Ruangan",
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+            ),
+            SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Center(
+                    child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: DataTable(
+                          headingRowColor: MaterialStateColor.resolveWith(
+                              (states) => Color(0xFF006600)),
+                          headingTextStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16),
+                          columns: [
+                            DataColumn(
+                              label: Text("#"),
+                            ),
+                            DataColumn(
+                              label: Text("Ruangan"),
+                            ),
+                            DataColumn(
+                              label: Text("Kapasitas"),
+                            ),
+                            DataColumn(
+                              label: Text("Penjaga"),
+                            ),
+                            DataColumn(
+                              label: Text("Kontak"),
+                            ),
+                            DataColumn(
+                              label: Text("Status"),
+                            ),
+                            DataColumn(
+                              label: Text("Aksi"),
+                            ),
+                          ],
+                          rows: _ruangan
+                              .map(
+                                (ruangan) => DataRow(
+                                  cells: [
+                                    DataCell(
+                                      Text(ruangan.id.toString()),
+                                    ),
+                                    DataCell(
+                                      Text(ruangan.namaRuangan),
+                                    ),
+                                    DataCell(
+                                      Text(ruangan.kapasitas.toString()),
+                                    ),
+                                    DataCell(
+                                      Text(ruangan.namaPenjaga),
+                                    ),
+                                    DataCell(
+                                      Text(ruangan.kontak),
+                                    ),
+                                    DataCell(
+                                      Text(ruangan.status.toString()),
+                                    ),
+                                    ruangan.status.toString() == 'Tersedia'
+                                        ? DataCell(
+                                            ElevatedButton(
+                                              onPressed: () => Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AddTransaksi())),
+                                              child: Text("Pinjam"),
+                                            ),
+                                          )
+                                        : DataCell(
+                                            Text("Lihat"),
+                                          ),
+                                  ],
+                                ),
+                              )
+                              .toList(),
+                        )))),
+          ],
+        ),
       ),
     );
   }
