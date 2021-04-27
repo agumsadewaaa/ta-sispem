@@ -61,7 +61,6 @@ class AuthRepository {
     Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences local = await _prefs;
     final String token = local.getString("token_sanctum") ?? null;
-    print(token);
     if (token != null) {
       return token;
     }

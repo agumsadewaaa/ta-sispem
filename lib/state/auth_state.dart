@@ -20,12 +20,14 @@ class AuthHasToken extends AuthState {
 class AuthFailed extends AuthState {}
 
 class AuthData extends AuthState {
+  final int id;
   final String name;
   final String email;
+  final int peminjamId;
 
-  AuthData({this.name, this.email});
+  AuthData({this.id, this.name, this.email, this.peminjamId});
   @override
-  List<Object> get props => [name, email];
+  List<Object> get props => [id, name, email, peminjamId];
 }
 
 class LoginInit extends AuthState {}

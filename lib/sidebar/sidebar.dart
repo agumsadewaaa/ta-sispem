@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:ta_sispem/blocs/auth_bloc.dart';
 import 'package:ta_sispem/event/auth_event.dart';
+import 'package:ta_sispem/repository/auth_repository.dart';
 import 'package:ta_sispem/state/auth_state.dart';
 
 import '../blocs/navigation_bloc.dart';
@@ -29,6 +30,10 @@ class _SideBarState extends State<SideBar>
 
   AuthBloc get _authBloc => widget.authBloc;
 
+  AuthRepository repo = AuthRepository();
+  String name;
+  String email;
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +42,14 @@ class _SideBarState extends State<SideBar>
     isSidebarOpenedStreamController = PublishSubject<bool>();
     isSidebarOpenedStream = isSidebarOpenedStreamController.stream;
     isSidebarOpenedSink = isSidebarOpenedStreamController.sink;
+
+    Future token = repo.hasToken();
+    token.then((value) => repo.getData(value).then((e) {
+          setState(() {
+            name = e.name;
+            email = e.email;
+          });
+        }));
   }
 
   @override
@@ -87,14 +100,14 @@ class _SideBarState extends State<SideBar>
                       ),
                       ListTile(
                         title: Text(
-                          "Username",
+                          name ?? 'user',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.w800),
                         ),
                         subtitle: Text(
-                          "1234567890",
+                          email ?? '123456',
                           style: TextStyle(
                             color: Color(0xFF1BB5FD),
                             fontSize: 12,

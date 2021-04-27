@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ta_sispem/blocs/auth_bloc.dart';
 import 'package:ta_sispem/model/ruangan.dart';
 import 'package:ta_sispem/services/servicesruangan.dart';
 import 'addtransaksi.dart';
@@ -6,11 +7,18 @@ import 'addtransaksi.dart';
 import '../blocs/navigation_bloc.dart';
 
 class RuanganPage extends StatefulWidget with NavigationStates {
+  final AuthBloc authBloc;
+
+  const RuanganPage({Key key, this.authBloc}) : super(key: key);
+
   @override
   RuanganPageState createState() => RuanganPageState();
+
+  void initState() {}
 }
 
 class RuanganPageState extends State<RuanganPage> {
+  AuthBloc get _authBloc => widget.authBloc;
   List<Ruangan> _ruangan;
 
   @override
@@ -101,7 +109,10 @@ class RuanganPageState extends State<RuanganPage> {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          AddTransaksi())),
+                                                          AddTransaksi(
+                                                            authBloc: _authBloc,
+                                                            ruangan: ruangan,
+                                                          ))),
                                               child: Text("Pinjam"),
                                             ),
                                           )

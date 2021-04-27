@@ -28,7 +28,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield AuthLoading();
 
       final user = await authRepository.getData(event.token);
-      yield AuthData(email: user.email, name: user.name);
+      yield AuthData(
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          peminjamId: user.peminjamId);
     }
 
     if (event is LoginProcess) {

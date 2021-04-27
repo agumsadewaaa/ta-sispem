@@ -1,17 +1,27 @@
 class Transaksi {
   int id;
   String namaRuangan;
-  int kapasitas;
-  int penjagaId;
+  String kontak;
+  int konfirmasiWRid;
+  int konfirmasiKBUid;
+  int konfirmasiKBSDid;
 
-  Transaksi({this.id, this.namaRuangan, this.kapasitas, this.penjagaId});
+  Transaksi(
+      {this.id,
+      this.namaRuangan,
+      this.kontak,
+      this.konfirmasiWRid,
+      this.konfirmasiKBUid,
+      this.konfirmasiKBSDid});
 
   factory Transaksi.fromJson(Map<String, dynamic> json) {
     return Transaksi(
       id: json['id'] as int,
       namaRuangan: json['nama_ruangan'] as String,
-      kapasitas: json['kapasitas'] as int,
-      penjagaId: json['penjaga_id'] as int,
+      kontak: json['nomor_handphone'] as String,
+      konfirmasiWRid: json['konfirmasi_wr_id'] as int,
+      konfirmasiKBUid: json['konfirmasi_kbu_id'] as int,
+      konfirmasiKBSDid: json['konfirmasi_kbsd_id'] as int,
     );
   }
 }

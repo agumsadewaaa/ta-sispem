@@ -23,8 +23,10 @@ void main() {
 class App extends StatelessWidget {
   final AuthRepository authRepository;
   final AuthBloc authBloc;
+  final AuthData data;
 
-  const App({Key key, this.authRepository, this.authBloc}) : super(key: key);
+  const App({Key key, this.authRepository, this.authBloc, this.data})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

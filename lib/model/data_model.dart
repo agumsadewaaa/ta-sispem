@@ -20,18 +20,24 @@ class TokenAuth {
 }
 
 class User {
+  int id;
   String name;
   String email;
+  int peminjamId;
 
-  User({this.name, this.email});
+  User({this.id, this.name, this.email, this.peminjamId});
 
   User.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
+      id = json['data']['id'];
       name = json['data']['name'];
       email = json['data']['email'];
+      peminjamId = json['data']['peminjam_id'];
     } else {
+      id = null;
       name = "";
       email = "";
+      peminjamId = null;
     }
   }
 }
