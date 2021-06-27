@@ -1,27 +1,62 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:ta_sispem/blocs/auth_bloc.dart';
 import 'package:ta_sispem/model/transaksi.dart';
+import 'package:ta_sispem/pages/addkritik.dart';
+import 'package:ta_sispem/repository/auth_repository.dart';
 import 'package:ta_sispem/services/servicestransaksi.dart';
+import 'package:ta_sispem/url.dart';
 import 'addtransaksi.dart';
+
+import 'package:http/http.dart' as http;
 
 import '../blocs/navigation_bloc.dart';
 
 class PeminjamanPage extends StatefulWidget with NavigationStates {
+  final AuthBloc authBloc;
+
+  const PeminjamanPage({Key key, this.authBloc}) : super(key: key);
   @override
   PeminjamanPageState createState() => PeminjamanPageState();
 }
 
 class PeminjamanPageState extends State<PeminjamanPage> {
   List<Transaksi> _transaksi;
+  AuthRepository repo = AuthRepository();
+  int peminjamId;
 
   @override
   void initState() {
     _transaksi = [];
     super.initState();
-    TransaksiService.getTransaksi().then((transaksi) {
-      setState(() {
-        _transaksi = transaksi;
-      });
-    });
+    Future token = repo.hasToken();
+    token.then((value) => repo.getData(value).then((e) {
+          setState(() {
+            peminjamId = e.peminjamId;
+            TransaksiService.myUrl = Url.url +
+                '/api/peminjams/' +
+                peminjamId.toString() +
+                '/transaksis/' +
+                peminjamId.toString();
+            TransaksiService.getTransaksi(TransaksiService.myUrl)
+                .then((transaksi) {
+              setState(() {
+                _transaksi = transaksi;
+              });
+            });
+          });
+        }));
+  }
+
+  Future hapusTransaksi(id) async {
+    print(id);
+    String deleteUrl = Url.url + '/api/transaksis/' + id;
+    print(deleteUrl);
+    final http.Response response = await http.delete(Uri.parse(deleteUrl));
+    print(response.body);
+    final hasil = json.decode(response.body);
+    return hasil;
   }
 
   @override
@@ -34,7 +69,7 @@ class PeminjamanPageState extends State<PeminjamanPage> {
         child: Column(
           children: [
             Text(
-              "Semua Ruangan",
+              "Transaksi",
               style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
             ),
             SingleChildScrollView(
@@ -98,17 +133,68 @@ class PeminjamanPageState extends State<PeminjamanPage> {
                                     ),
                                     transaksi.konfirmasiWRid != null
                                         ? DataCell(
-                                            ElevatedButton(
-                                              onPressed: () => Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          AddTransaksi())),
-                                              child: Text("Cetak"),
+                                            Container(
+                                              width: 155,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  ElevatedButton(
+                                                    onPressed: () => Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                AddTransaksi())),
+                                                    child: Text(
+                                                      "Cetak",
+                                                      style: TextStyle(
+                                                          color: Colors.black),
+                                                    ),
+                                                    style: ButtonStyle(
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors
+                                                                    .white70)),
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: () => Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                AddKritik())),
+                                                    child: Text("Selesai"),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           )
                                         : DataCell(
-                                            Text("Batalkan"),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                hapusTransaksi(
+                                                        transaksi.id.toString())
+                                                    .then((value) {
+                                                  TransaksiService.getTransaksi(
+                                                          TransaksiService
+                                                              .myUrl)
+                                                      .then((transaksi) {
+                                                    setState(() {
+                                                      _transaksi = transaksi;
+                                                    });
+                                                  });
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                          content: Text(
+                                                              'Transaksi deleted successfully')));
+                                                });
+                                              },
+                                              child: Text("Batalkan"),
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.red)),
+                                            ),
                                           ),
                                   ],
                                 ),

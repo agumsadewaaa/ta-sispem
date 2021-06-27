@@ -24,8 +24,9 @@ class User {
   String name;
   String email;
   int peminjamId;
+  int roleId;
 
-  User({this.id, this.name, this.email, this.peminjamId});
+  User({this.id, this.name, this.email, this.peminjamId, this.roleId});
 
   User.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
@@ -33,11 +34,13 @@ class User {
       name = json['data']['name'];
       email = json['data']['email'];
       peminjamId = json['data']['peminjam_id'];
+      roleId = json['data']['role_id'];
     } else {
       id = null;
       name = "";
       email = "";
       peminjamId = null;
+      roleId = null;
     }
   }
 }

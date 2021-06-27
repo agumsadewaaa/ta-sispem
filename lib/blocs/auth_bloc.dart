@@ -32,7 +32,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           id: user.id,
           email: user.email,
           name: user.name,
-          peminjamId: user.peminjamId);
+          peminjamId: user.peminjamId,
+          roleId: user.roleId);
     }
 
     if (event is LoginProcess) {

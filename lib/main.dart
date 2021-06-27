@@ -38,6 +38,7 @@ class App extends StatelessWidget {
           cubit: authBloc,
           builder: (context, AuthState state) {
             print(state);
+            print(authBloc.toString());
             if (state is AuthInit) {
               authBloc.add(AuthCheck());
               return Container(

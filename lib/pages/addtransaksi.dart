@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ta_sispem/blocs/auth_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:ta_sispem/main.dart';
 import 'package:ta_sispem/model/ruangan.dart';
-import 'package:ta_sispem/pages/homepage.dart';
-import 'package:ta_sispem/pages/ruanganpage.dart';
 import 'package:ta_sispem/repository/auth_repository.dart';
 import 'package:ta_sispem/url.dart';
 
@@ -154,27 +153,41 @@ class _AddTransaksiState extends State<AddTransaksi> {
               SizedBox(
                 height: 20,
               ),
-              Row(
-                children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          saveTransaksi().then((value) {
-                            Navigator.pop(context, true);
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text('Transaksi saved successfully')));
-                          });
-                        }
-                      },
-                      child: Text("Save")),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.grey,
-                        onPrimary: Colors.black,
-                      ),
-                      onPressed: () {},
-                      child: Text("Cancel")),
-                ],
+              Container(
+                alignment: Alignment.topLeft,
+                width: 160,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState.validate()) {
+                            saveTransaksi().then((value) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => App(
+                                          authBloc:
+                                              AuthBloc(authRepository: repo))));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          'Transaksi saved successfully')));
+                            });
+                          }
+                        },
+                        child: Text("Save")),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.white70,
+                          onPrimary: Colors.black,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context, true);
+                        },
+                        child: Text("Cancel")),
+                  ],
+                ),
               ),
             ],
           ),

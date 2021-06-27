@@ -45,10 +45,12 @@ class _SideBarState extends State<SideBar>
 
     Future token = repo.hasToken();
     token.then((value) => repo.getData(value).then((e) {
-          setState(() {
-            name = e.name;
-            email = e.email;
-          });
+          if (this.mounted) {
+            setState(() {
+              name = e.name;
+              email = e.email;
+            });
+          }
         }));
   }
 
@@ -178,6 +180,7 @@ class _SideBarState extends State<SideBar>
                       BlocBuilder<AuthBloc, AuthState>(
                           cubit: _authBloc,
                           builder: (context, state) {
+                            print(state);
                             return MenuItem(
                               icon: Icons.exit_to_app,
                               title: "Logout",

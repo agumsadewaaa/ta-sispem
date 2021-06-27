@@ -3,12 +3,19 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:ta_sispem/login.dart';
+import 'package:ta_sispem/blocs/auth_bloc.dart';
+import 'package:ta_sispem/event/auth_event.dart';
+import 'package:ta_sispem/repository/auth_repository.dart';
+import 'package:ta_sispem/state/auth_state.dart';
 
 import '../blocs/navigation_bloc.dart';
 import 'menu_item.dart';
 
 class SideBarVer extends StatefulWidget {
+  final AuthBloc authBloc;
+
+  const SideBarVer({Key key, this.authBloc}) : super(key: key);
+
   @override
   _SideBarStateVer createState() => _SideBarStateVer();
 }
@@ -21,6 +28,12 @@ class _SideBarStateVer extends State<SideBarVer>
   StreamSink<bool> isSidebarOpenedSink;
   final _animationDuration = const Duration(milliseconds: 500);
 
+  AuthBloc get _authBloc => widget.authBloc;
+
+  AuthRepository repo = AuthRepository();
+  String name;
+  String email;
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +42,16 @@ class _SideBarStateVer extends State<SideBarVer>
     isSidebarOpenedStreamController = PublishSubject<bool>();
     isSidebarOpenedStream = isSidebarOpenedStreamController.stream;
     isSidebarOpenedSink = isSidebarOpenedStreamController.sink;
+
+    Future token = repo.hasToken();
+    token.then((value) => repo.getData(value).then((e) {
+          if (this.mounted) {
+            setState(() {
+              name = e.name;
+              email = e.email;
+            });
+          }
+        }));
   }
 
   @override
@@ -79,14 +102,14 @@ class _SideBarStateVer extends State<SideBarVer>
                       ),
                       ListTile(
                         title: Text(
-                          "Username",
+                          name ?? 'user',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.w800),
                         ),
                         subtitle: Text(
-                          "1234567890",
+                          email ?? '123456',
                           style: TextStyle(
                             color: Color(0xFF1BB5FD),
                             fontSize: 12,
@@ -145,18 +168,18 @@ class _SideBarStateVer extends State<SideBarVer>
                         icon: Icons.settings,
                         title: "Settings",
                       ),
-                      MenuItem(
-                        icon: Icons.exit_to_app,
-                        title: "Logout",
-                        onTap: () {
-                          onIconPressed();
-                          Navigator.pop(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()),
-                          );
-                        },
-                      ),
+                      BlocBuilder<AuthBloc, AuthState>(
+                          cubit: _authBloc,
+                          builder: (context, state) {
+                            return MenuItem(
+                              icon: Icons.exit_to_app,
+                              title: "Logout",
+                              onTap: () {
+                                onIconPressed();
+                                _authBloc.add(LoggedOut());
+                              },
+                            );
+                          }),
                     ],
                   ),
                 ),

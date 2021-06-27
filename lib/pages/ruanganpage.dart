@@ -30,6 +30,7 @@ class RuanganPageState extends State<RuanganPage> {
         _ruangan = ruangan;
       });
     });
+    print(_authBloc.toString());
   }
 
   @override
@@ -117,7 +118,64 @@ class RuanganPageState extends State<RuanganPage> {
                                             ),
                                           )
                                         : DataCell(
-                                            Text("Lihat"),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return Dialog(
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          40)),
+                                                      elevation: 16,
+                                                      child: Container(
+                                                        height: 300.0,
+                                                        width: 360.0,
+                                                        child: ListView(
+                                                          children: <Widget>[
+                                                            SizedBox(
+                                                                height: 20),
+                                                            Center(
+                                                              child: Text(
+                                                                "Detail",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        24,
+                                                                    color: Colors
+                                                                        .blue,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                                height: 20),
+                                                            _showDetail(
+                                                                id: ruangan.id,
+                                                                nama: ruangan
+                                                                    .namaRuangan,
+                                                                status: ruangan
+                                                                    .status)
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              child: Text(
+                                                "Lihat",
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.white70)),
+                                            ),
                                           ),
                                   ],
                                 ),
@@ -129,4 +187,26 @@ class RuanganPageState extends State<RuanganPage> {
       ),
     );
   }
+}
+
+Widget _showDetail({int id, String nama, String status}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+    child: Column(
+      children: <Widget>[
+        ListTile(
+          leading: Text("id"),
+          title: Text(": " + id.toString()),
+        ),
+        ListTile(
+          leading: Text("Nama"),
+          title: Text(": " + nama),
+        ),
+        ListTile(
+          leading: Text("Status"),
+          title: Text(": " + status.toString()),
+        )
+      ],
+    ),
+  );
 }

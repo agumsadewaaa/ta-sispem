@@ -24,10 +24,11 @@ class AuthData extends AuthState {
   final String name;
   final String email;
   final int peminjamId;
+  final int roleId;
 
-  AuthData({this.id, this.name, this.email, this.peminjamId});
+  AuthData({this.id, this.name, this.email, this.peminjamId, this.roleId});
   @override
-  List<Object> get props => [id, name, email, peminjamId];
+  List<Object> get props => [id, name, email, peminjamId, roleId];
 }
 
 class LoginInit extends AuthState {}

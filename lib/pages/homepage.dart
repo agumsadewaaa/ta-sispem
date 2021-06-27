@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:ta_sispem/blocs/auth_bloc.dart';
 import 'package:ta_sispem/repository/auth_repository.dart';
 import '../blocs/navigation_bloc.dart';
 
 class HomePage extends StatefulWidget with NavigationStates {
+  final AuthBloc authBloc;
+
+  const HomePage({Key key, this.authBloc}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }

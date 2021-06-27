@@ -1,14 +1,22 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../model/transaksi.dart';
-import '../url.dart';
 
 class TransaksiService {
-  static const myUrl = Url.url + '/api/peminjams/1/transaksis/1';
+  static String myUrl = '';
 
-  static Future<List<Transaksi>> getTransaksi() async {
+  static Future<List<Transaksi>> getTransaksi(myUrl) async {
+    print(myUrl);
     http.Response response = await http.get(Uri.parse(myUrl));
     List<Transaksi> list = parseResponse(response.body);
+    return list;
+  }
+
+  static Future<List<Transaksi>> getPeminjaman(myUrl) async {
+    print(myUrl);
+    http.Response response = await http.get(Uri.parse(myUrl));
+    List<Transaksi> list = parseResponse(response.body);
+    print(list);
     return list;
   }
 
