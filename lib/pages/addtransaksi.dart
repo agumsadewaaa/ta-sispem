@@ -149,6 +149,7 @@ class _AddTransaksiState extends State<AddTransaksi> {
                   }
                   return null;
                 },
+                keyboardType: TextInputType.number,
               ),
               SizedBox(
                 height: 20,
@@ -163,16 +164,19 @@ class _AddTransaksiState extends State<AddTransaksi> {
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
                             saveTransaksi().then((value) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => App(
-                                          authBloc:
-                                              AuthBloc(authRepository: repo))));
                               ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                       content: Text(
                                           'Transaksi saved successfully')));
+                              new Future.delayed(const Duration(seconds: 1),
+                                  () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => App(
+                                            authBloc: AuthBloc(
+                                                authRepository: repo))));
+                              });
                             });
                           }
                         },
