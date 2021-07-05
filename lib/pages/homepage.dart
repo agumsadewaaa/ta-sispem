@@ -29,11 +29,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Text(
-      name ?? '',
-      style: TextStyle(fontWeight: FontWeight.w900, fontSize: 28),
-      textAlign: TextAlign.center,
-    ));
+    return Container(
+        padding: EdgeInsets.only(right: 5, left: 5),
+        child: Center(
+            child: Text(
+          name ?? '',
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 25),
+          textAlign: TextAlign.center,
+        )));
   }
 }

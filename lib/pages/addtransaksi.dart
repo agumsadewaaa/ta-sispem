@@ -76,7 +76,9 @@ class _AddTransaksiState extends State<AddTransaksi> {
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
-          child: Column(
+          child: Padding(
+            padding: EdgeInsets.only(left: 7, right: 7),
+            child: Column(
             children: [
               TextFormField(
                 onTap: () async {
@@ -190,6 +192,7 @@ class _AddTransaksiState extends State<AddTransaksi> {
                 ),
               ),
             ],
+          ),
           ),
         ),
       ),
