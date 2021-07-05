@@ -29,8 +29,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.only(right: 5, left: 5),
+    return Padding(
+        padding: EdgeInsets.only(right: 10, left: 15),
         child: Center(
             child: Text(
           name ?? '',

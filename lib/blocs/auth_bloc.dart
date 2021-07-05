@@ -61,7 +61,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           yield LogoutSuccess();
         }
       } catch (e) {
-        yield LoginFailed("login gagal");
+        yield LogoutSuccess();
       }
     }
   }
