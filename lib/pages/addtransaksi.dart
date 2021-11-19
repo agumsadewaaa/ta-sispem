@@ -79,124 +79,126 @@ class _AddTransaksiState extends State<AddTransaksi> {
           child: Padding(
             padding: EdgeInsets.only(left: 7, right: 7),
             child: Column(
-            children: [
-              TextFormField(
-                onTap: () async {
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                  _dateTime = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2010),
-                      lastDate: DateTime(2030));
+              children: [
+                TextFormField(
+                  onTap: () async {
+                    FocusScope.of(context).requestFocus(new FocusNode());
+                    _dateTime = await showDatePicker(
+                        context: context,
+                        initialDate:
+                            DateTime.now().subtract(Duration(days: -3)),
+                        firstDate: DateTime.now().subtract(Duration(days: -3)),
+                        lastDate: DateTime(2030));
 
-                  String date = DateFormat('dd-MM-yyyy').format(_dateTime);
-                  _tanggalMulai.text = date;
-                },
-                controller: _tanggalMulai,
-                decoration: InputDecoration(labelText: "Tanggal Mulai"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please input this field !";
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                onTap: () async {
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                  _dateTime = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2010),
-                      lastDate: DateTime(2030));
-
-                  String date = DateFormat('dd-MM-yyyy').format(_dateTime);
-                  _tanggalSelesai.text = date;
-                },
-                controller: _tanggalSelesai,
-                decoration: InputDecoration(labelText: "Tanggal Selesai"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please input this field !";
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _namaAcara,
-                decoration: InputDecoration(labelText: "Nama Acara"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please input this field !";
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _penanggungJawab,
-                decoration: InputDecoration(labelText: "Penanggung Jawab"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please input this field !";
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _kontak,
-                decoration: InputDecoration(labelText: "kontak"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please input this field !";
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.number,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                width: 160,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState.validate()) {
-                            saveTransaksi().then((value) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(
-                                          'Transaksi saved successfully')));
-                              new Future.delayed(const Duration(seconds: 1),
-                                  () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => App(
-                                            authBloc: AuthBloc(
-                                                authRepository: repo))));
-                              });
-                            });
-                          }
-                        },
-                        child: Text("Save")),
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.white70,
-                          onPrimary: Colors.black,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context, true);
-                        },
-                        child: Text("Cancel")),
-                  ],
+                    String date = DateFormat('dd-MM-yyyy').format(_dateTime);
+                    _tanggalMulai.text = date;
+                  },
+                  controller: _tanggalMulai,
+                  decoration: InputDecoration(labelText: "Tanggal Mulai"),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please input this field !";
+                    }
+                    return null;
+                  },
                 ),
-              ),
-            ],
-          ),
+                TextFormField(
+                  onTap: () async {
+                    FocusScope.of(context).requestFocus(new FocusNode());
+                    _dateTime = await showDatePicker(
+                        context: context,
+                        initialDate:
+                            DateTime.now().subtract(Duration(days: -3)),
+                        firstDate: DateTime.now().subtract(Duration(days: -3)),
+                        lastDate: DateTime(2030));
+
+                    String date = DateFormat('dd-MM-yyyy').format(_dateTime);
+                    _tanggalSelesai.text = date;
+                  },
+                  controller: _tanggalSelesai,
+                  decoration: InputDecoration(labelText: "Tanggal Selesai"),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please input this field !";
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _namaAcara,
+                  decoration: InputDecoration(labelText: "Nama Acara"),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please input this field !";
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _penanggungJawab,
+                  decoration: InputDecoration(labelText: "Penanggung Jawab"),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please input this field !";
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _kontak,
+                  decoration: InputDecoration(labelText: "Kontak"),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please input this field !";
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.number,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  alignment: Alignment.topLeft,
+                  width: 160,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              saveTransaksi().then((value) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Transaksi saved successfully')));
+                                new Future.delayed(const Duration(seconds: 1),
+                                    () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => App(
+                                              authBloc: AuthBloc(
+                                                  authRepository: repo))));
+                                });
+                              });
+                            }
+                          },
+                          child: Text("Save")),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.white70,
+                            onPrimary: Colors.black,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context, true);
+                          },
+                          child: Text("Cancel")),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -243,6 +243,7 @@ class _LoginFormState extends State<LoginForm> {
                         decoration: InputDecoration(
                             hintText: "Enter Password...",
                             prefixIcon: Icon(Icons.vpn_key)),
+                        obscureText: true,
                       ),
                     ],
                   ),

@@ -68,54 +68,57 @@ class _AddKritikState extends State<AddKritik> {
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _kritik,
-                decoration: InputDecoration(labelText: "Keluhan"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please input this field !";
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _saran,
-                decoration: InputDecoration(labelText: "Saran"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please input this field !";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                width: 160,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState.validate()) {
-                            saveTransaksi().then((value) {
-                              Navigator.pop(context, true);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(
-                                          'Transaksi saved successfully')));
-                            });
-                          }
-                        },
-                        child: Text("Save")),
-                  ],
+          child: Padding(
+            padding: EdgeInsets.only(left: 7, right: 7),
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _kritik,
+                  decoration: InputDecoration(labelText: "Keluhan"),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please input this field !";
+                    }
+                    return null;
+                  },
                 ),
-              ),
-            ],
+                TextFormField(
+                  controller: _saran,
+                  decoration: InputDecoration(labelText: "Saran"),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please input this field !";
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  alignment: Alignment.topLeft,
+                  width: 160,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              saveTransaksi().then((value) {
+                                Navigator.pop(context, true);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Transaksi saved successfully')));
+                              });
+                            }
+                          },
+                          child: Text("Save")),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

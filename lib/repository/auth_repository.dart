@@ -35,10 +35,8 @@ class AuthRepository {
       });
 
       var resbody = json.decode(response.body);
-      unsetLocalToken();
       return Logout.fromJson(resbody);
     } catch (e) {
-      unsetLocalToken();
       return e;
     }
   }

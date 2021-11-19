@@ -6,7 +6,6 @@ import 'package:ta_sispem/model/transaksi.dart';
 import 'package:ta_sispem/repository/auth_repository.dart';
 import 'package:ta_sispem/services/servicestransaksi.dart';
 import 'package:ta_sispem/url.dart';
-import 'addtransaksi.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -22,8 +21,11 @@ class ListPeminjamanPage extends StatefulWidget with NavigationStates {
 
 class ListPeminjamanPageState extends State<ListPeminjamanPage> {
   List<Transaksi> _transaksi;
+  TextEditingController _pesanController = TextEditingController();
+  bool _validate;
   AuthRepository repo = AuthRepository();
   int roleId;
+  int status;
 
   @override
   void initState() {
@@ -45,14 +47,107 @@ class ListPeminjamanPageState extends State<ListPeminjamanPage> {
         }));
   }
 
-  Future hapusTransaksi(id) async {
-    print(id);
-    String deleteUrl = Url.url + '/api/transaksis/' + id;
-    print(deleteUrl);
-    final http.Response response = await http.delete(Uri.parse(deleteUrl));
-    print(response.body);
-    final hasil = json.decode(response.body);
-    return hasil;
+  @override
+  void dispose() {
+    _pesanController.dispose();
+    super.dispose();
+  }
+
+  Future savePesan(int idTransaksi, int s) async {
+    print(idTransaksi + s);
+    String savePesanUrl = Url.url + '/api/pesanKonfirmasis';
+
+    if (s == 0) {
+      final http.Response response =
+          await http.post(Uri.parse(savePesanUrl), body: {
+        'transaksi_id': idTransaksi.toString(),
+        'pesan': _pesanController.text,
+        'target': roleId.toString(),
+        'tolak': '1'
+      });
+
+      print(response.body);
+      final hasil = json.decode(response.body);
+      return hasil;
+    } else {
+      final http.Response response =
+          await http.post(Uri.parse(savePesanUrl), body: {
+        'transaksi_id': idTransaksi.toString(),
+        'pesan': _pesanController.text,
+        'target': roleId.toString(),
+        'terima': '1'
+      });
+
+      print(response.body);
+      final hasil = json.decode(response.body);
+      return hasil;
+    }
+  }
+
+  createAlertDialog(BuildContext context, int idTransaksi) {
+    _pesanController.text = '';
+    _validate = false;
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Konfirmasi Peminjaman"),
+            content: TextField(
+              decoration: InputDecoration(
+                  labelText: 'Pesan Konfirmasi',
+                  errorText: _validate ? 'Please input this field!' : null),
+              minLines: 1,
+              maxLines: 5,
+              controller: _pesanController,
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _pesanController.text.isEmpty
+                        ? _validate = true
+                        : _validate = false;
+                  });
+                  savePesan(idTransaksi, 0).then((value) {
+                    TransaksiService.getPeminjaman(TransaksiService.myUrl)
+                        .then((transaksi) {
+                      setState(() {
+                        _transaksi = transaksi;
+                      });
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Pesan Konfirmasi saved successfully')));
+                    Navigator.of(context).pop();
+                  });
+                },
+                child: Text("Tolak"),
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.red)),
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _pesanController.text.isEmpty
+                          ? _validate = true
+                          : _validate = false;
+                    });
+                    savePesan(idTransaksi, 1).then((value) {
+                      TransaksiService.getPeminjaman(TransaksiService.myUrl)
+                          .then((transaksi) {
+                        setState(() {
+                          _transaksi = transaksi;
+                        });
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content:
+                              Text('Pesan Konfirmasi saved successfully')));
+                      Navigator.of(context).pop();
+                    });
+                  },
+                  child: Text("Terima")),
+            ],
+          );
+        });
   }
 
   @override
@@ -125,33 +220,225 @@ class ListPeminjamanPageState extends State<ListPeminjamanPage> {
                                     DataCell(
                                       Text(transaksi.namaAcara),
                                     ),
-                                    transaksi.konfirmasiWRid == null ||
-                                            transaksi.konfirmasiKBSDid == null
+                                    transaksi.status == 3
                                         ? DataCell(
                                             ElevatedButton(
-                                                onPressed: () => Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            AddTransaksi())),
-                                                child: Text(
-                                                  "Respon",
-                                                )),
-                                          )
-                                        : DataCell(
-                                            ElevatedButton(
-                                              onPressed: null,
-                                              child: Text(
-                                                "Batalkan",
-                                                style: TextStyle(
-                                                    color: Colors.black),
-                                              ),
+                                              onPressed: () {},
+                                              child: Text("Ditolak"),
                                               style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all(
-                                                          Colors.white70)),
+                                                          Colors.red)),
                                             ),
-                                          ),
+                                          )
+                                        : transaksi.status == 4
+                                            ? DataCell(
+                                                ElevatedButton(
+                                                  onPressed: () {},
+                                                  child: Text("Ditolak Sistem"),
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(Colors.red)),
+                                                ),
+                                              )
+                                            : roleId == 2 || roleId == 3
+                                                ? transaksi.konfirmasiWRid !=
+                                                            null ||
+                                                        transaksi
+                                                                .konfirmasiKBSDid !=
+                                                            null
+                                                    ? transaksi.pkwr2 == 1 ||
+                                                            transaksi.pkbsd == 1
+                                                        ? DataCell(
+                                                            ElevatedButton(
+                                                              onPressed: () {},
+                                                              child: Text(
+                                                                  "Diterima"),
+                                                              style: ButtonStyle(
+                                                                  backgroundColor:
+                                                                      MaterialStateProperty.all(
+                                                                          Colors
+                                                                              .green)),
+                                                            ),
+                                                          )
+                                                        : DataCell(
+                                                            ElevatedButton(
+                                                              onPressed: () {},
+                                                              child: Text(
+                                                                  "Ditolak"),
+                                                              style: ButtonStyle(
+                                                                  backgroundColor:
+                                                                      MaterialStateProperty.all(
+                                                                          Colors
+                                                                              .red)),
+                                                            ),
+                                                          )
+                                                    : DataCell(
+                                                        ElevatedButton(
+                                                            onPressed: () {
+                                                              createAlertDialog(
+                                                                  context,
+                                                                  transaksi.id);
+                                                            },
+                                                            child: Text(
+                                                              "Respon",
+                                                            )),
+                                                      )
+                                                : roleId == 4
+                                                    ? transaksi.konfirmasiWRid !=
+                                                                null ||
+                                                            transaksi
+                                                                    .konfirmasiKBSDid !=
+                                                                null
+                                                        ? transaksi.pkwr2 ==
+                                                                    0 ||
+                                                                transaksi
+                                                                        .pkbsd ==
+                                                                    0
+                                                            ? DataCell(
+                                                                ElevatedButton(
+                                                                  onPressed:
+                                                                      () {},
+                                                                  child: Text(
+                                                                      "Ditolak WR II/KBSD"),
+                                                                  style: ButtonStyle(
+                                                                      backgroundColor:
+                                                                          MaterialStateProperty.all(
+                                                                              Colors.red)),
+                                                                ),
+                                                              )
+                                                            : transaksi.konfirmasiKBUid !=
+                                                                    null
+                                                                ? transaksi.pkbu ==
+                                                                        1
+                                                                    ? DataCell(
+                                                                        ElevatedButton(
+                                                                          onPressed:
+                                                                              () {},
+                                                                          child:
+                                                                              Text("Diterima"),
+                                                                          style:
+                                                                              ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.green)),
+                                                                        ),
+                                                                      )
+                                                                    : DataCell(
+                                                                        ElevatedButton(
+                                                                          onPressed:
+                                                                              () {},
+                                                                          child:
+                                                                              Text("Ditolak"),
+                                                                          style:
+                                                                              ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
+                                                                        ),
+                                                                      )
+                                                                : DataCell(
+                                                                    ElevatedButton(
+                                                                        onPressed:
+                                                                            () {
+                                                                          createAlertDialog(
+                                                                              context,
+                                                                              transaksi.id);
+                                                                        },
+                                                                        child:
+                                                                            Text(
+                                                                          "Respon",
+                                                                        )),
+                                                                  )
+                                                        : DataCell(
+                                                            ElevatedButton(
+                                                              onPressed: () {},
+                                                              child: Text(
+                                                                  "Belum Dikonfirmasi WR II/KBSD"),
+                                                              style: ButtonStyle(
+                                                                  backgroundColor:
+                                                                      MaterialStateProperty.all(
+                                                                          Colors
+                                                                              .red)),
+                                                            ),
+                                                          )
+                                                    : roleId == 5
+                                                        ? transaksi.konfirmasiWRid !=
+                                                                    null ||
+                                                                transaksi
+                                                                        .konfirmasiKBSDid !=
+                                                                    null
+                                                            ? transaksi.pkwr2 ==
+                                                                        0 ||
+                                                                    transaksi
+                                                                            .pkbsd ==
+                                                                        0
+                                                                ? DataCell(
+                                                                    ElevatedButton(
+                                                                      onPressed:
+                                                                          () {},
+                                                                      child: Text(
+                                                                          "Ditolak WR II/KBSD"),
+                                                                      style: ButtonStyle(
+                                                                          backgroundColor:
+                                                                              MaterialStateProperty.all(Colors.red)),
+                                                                    ),
+                                                                  )
+                                                                : transaksi.konfirmasiKBUid !=
+                                                                        null
+                                                                    ? transaksi.pkbu ==
+                                                                            1
+                                                                        ? transaksi.konfirmasiKSBRTid !=
+                                                                                null
+                                                                            ? transaksi.pksbrt == 1
+                                                                                ? DataCell(
+                                                                                    ElevatedButton(
+                                                                                      onPressed: () {},
+                                                                                      child: Text("Diterima"),
+                                                                                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.green)),
+                                                                                    ),
+                                                                                  )
+                                                                                : DataCell(
+                                                                                    ElevatedButton(
+                                                                                      onPressed: () {},
+                                                                                      child: Text("Ditolak"),
+                                                                                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
+                                                                                    ),
+                                                                                  )
+                                                                            : DataCell(
+                                                                                ElevatedButton(
+                                                                                    onPressed: () {
+                                                                                      createAlertDialog(context, transaksi.id);
+                                                                                    },
+                                                                                    child: Text(
+                                                                                      "Respon",
+                                                                                    )),
+                                                                              )
+                                                                        : DataCell(
+                                                                            ElevatedButton(
+                                                                              onPressed: () {},
+                                                                              child: Text("Ditolak KBU"),
+                                                                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
+                                                                            ),
+                                                                          )
+                                                                    : DataCell(
+                                                                        ElevatedButton(
+                                                                          onPressed:
+                                                                              () {},
+                                                                          child:
+                                                                              Text("Belum Dikonfirmasi KBU"),
+                                                                          style:
+                                                                              ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
+                                                                        ),
+                                                                      )
+                                                            : DataCell(
+                                                                ElevatedButton(
+                                                                  onPressed:
+                                                                      () {},
+                                                                  child: Text(
+                                                                      "Belum Dikonfirmasi WR II/KBSD"),
+                                                                  style: ButtonStyle(
+                                                                      backgroundColor:
+                                                                          MaterialStateProperty.all(
+                                                                              Colors.red)),
+                                                                ),
+                                                              )
+                                                        : DataCell(Text('')),
                                   ],
                                 ),
                               )
