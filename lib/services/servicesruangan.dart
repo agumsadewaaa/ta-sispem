@@ -4,9 +4,9 @@ import '../model/ruangan.dart';
 import '../url.dart';
 
 class RuanganService {
-  static const myUrl = Url.url + '/api/peminjams/1/transaksis';
+  static String myUrl = '';
 
-  static Future<List<Ruangan>> getRuangan() async {
+  static Future<List<Ruangan>> getRuangan(myUrl) async {
     http.Response response = await http.get(Uri.parse(myUrl));
     List<Ruangan> list = parseResponse(response.body);
     return list;

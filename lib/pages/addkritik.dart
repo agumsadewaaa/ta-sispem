@@ -1,18 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:ta_sispem/blocs/auth_bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:ta_sispem/model/ruangan.dart';
+import 'package:ta_sispem/main.dart';
+import 'package:ta_sispem/model/transaksi.dart';
 import 'package:ta_sispem/repository/auth_repository.dart';
 import 'package:ta_sispem/url.dart';
 
 class AddKritik extends StatefulWidget {
   final AuthBloc authBloc;
-  final Ruangan ruangan;
+  final Transaksi transaksi;
 
-  const AddKritik({Key key, this.authBloc, this.ruangan}) : super(key: key);
+  const AddKritik({Key key, this.authBloc, this.transaksi}) : super(key: key);
 
   @override
   _AddKritikState createState() => _AddKritikState();
@@ -23,20 +23,17 @@ class _AddKritikState extends State<AddKritik> {
   TextEditingController _kritik = TextEditingController();
   TextEditingController _saran = TextEditingController();
 
-  Ruangan get _ruangan => widget.ruangan;
+  Transaksi get _transaksi => widget.transaksi;
   AuthRepository repo = AuthRepository();
   int peminjamId;
   String saveUrl;
 
-  Future saveTransaksi() async {
+  Future saveKritik() async {
     print(saveUrl);
     final http.Response response = await http.post(Uri.parse(saveUrl), body: {
-      'peminjam_id': peminjamId.toString(),
-      'tanggal_mulai': _kritik.text,
-      'tanggal_selesai': _saran.text,
-      'ruangan_id': _ruangan.id.toString(),
-      'status': '0',
-      'periode': DateFormat('Y').format(DateTime.now()).toString()
+      'transaksi_id': _transaksi.id.toString(),
+      'keluhan': _kritik.text,
+      'saran': _saran.text
     });
     print(response.body);
     final hasil = json.decode(response.body);
@@ -53,7 +50,9 @@ class _AddKritikState extends State<AddKritik> {
             saveUrl = Url.url +
                 '/api/peminjams/' +
                 peminjamId.toString() +
-                '/transaksis';
+                '/transaksis/' +
+                _transaksi.id.toString() +
+                '/pengaduans';
           });
         }));
   }
@@ -104,12 +103,20 @@ class _AddKritikState extends State<AddKritik> {
                       ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
-                              saveTransaksi().then((value) {
-                                Navigator.pop(context, true);
+                              saveKritik().then((value) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                        content: Text(
-                                            'Transaksi saved successfully')));
+                                        content:
+                                            Text('Data saved successfully')));
+                                new Future.delayed(const Duration(seconds: 1),
+                                    () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => App(
+                                              authBloc: AuthBloc(
+                                                  authRepository: repo))));
+                                });
                               });
                             }
                           },

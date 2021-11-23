@@ -57,6 +57,6 @@ flutter:
     - assets/images/
 
   fonts:
-     - family: Nunito
-       fonts:
-         - asset: assets/fonts/Nunito-Bold.ttf
+    - family: Nunito
+      fonts:
+        - asset: assets/fonts/Nunito-Bold.ttf

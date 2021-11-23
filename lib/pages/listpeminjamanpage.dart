@@ -203,7 +203,8 @@ class ListPeminjamanPageState extends State<ListPeminjamanPage> {
                                 (transaksi) => DataRow(
                                   cells: [
                                     DataCell(
-                                      Text(transaksi.id.toString()),
+                                      Text((_transaksi.indexOf(transaksi) + 1)
+                                          .toString()),
                                     ),
                                     DataCell(
                                       Text(transaksi.namaPeminjam),

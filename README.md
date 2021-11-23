@@ -1,6 +1,6 @@
 # ta_sispem
 
-Aplikasi Peminjaman Ruangan
+A new Flutter project.
 
 ## Getting Started
 

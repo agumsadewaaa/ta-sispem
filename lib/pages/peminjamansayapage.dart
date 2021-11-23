@@ -163,13 +163,14 @@ class PeminjamanPageState extends State<PeminjamanPage> {
                                 (transaksi) => DataRow(
                                   cells: [
                                     DataCell(
-                                      Text(transaksi.id.toString()),
+                                      Text((_transaksi.indexOf(transaksi) + 1)
+                                          .toString()),
                                     ),
                                     DataCell(
                                       Text(transaksi.namaRuangan),
                                     ),
                                     DataCell(
-                                      Text(transaksi.pkbsd.toString()),
+                                      Text(transaksi.hp),
                                     ),
                                     transaksi.konfirmasiWRid != null
                                         ? transaksi.pkwr2 == 1
@@ -241,23 +242,37 @@ class PeminjamanPageState extends State<PeminjamanPage> {
                                                               () {},
                                                         ),
                                                       )
-                                                    : DataCell(
-                                                        TwinkleButton(
-                                                          buttonTitle:
-                                                              Text('Ditolak'),
-                                                          buttonColor:
-                                                              Colors.red,
-                                                          buttonHeight: 40,
-                                                          buttonWidth: 125,
-                                                          onclickButtonFunction:
-                                                              () {},
-                                                        ),
-                                                      )
+                                                    : transaksi.pkbu == 0
+                                                        ? DataCell(
+                                                            TwinkleButton(
+                                                              buttonTitle: Text(
+                                                                  'Ditolak'),
+                                                              buttonColor:
+                                                                  Colors.red,
+                                                              buttonHeight: 40,
+                                                              buttonWidth: 125,
+                                                              onclickButtonFunction:
+                                                                  () {},
+                                                            ),
+                                                          )
+                                                        : DataCell(
+                                                            TwinkleButton(
+                                                              buttonTitle: Text(
+                                                                  'Belum Direspon'),
+                                                              buttonColor:
+                                                                  Colors.orange,
+                                                              buttonHeight: 40,
+                                                              buttonWidth: 125,
+                                                              onclickButtonFunction:
+                                                                  () {},
+                                                            ),
+                                                          )
                                                 : DataCell(
                                                     TwinkleButton(
-                                                      buttonTitle:
-                                                          Text('Ditolak'),
-                                                      buttonColor: Colors.green,
+                                                      buttonTitle: Text(
+                                                          'Belum Direspon'),
+                                                      buttonColor:
+                                                          Colors.orange,
                                                       buttonHeight: 40,
                                                       buttonWidth: 125,
                                                       onclickButtonFunction:
@@ -314,21 +329,48 @@ class PeminjamanPageState extends State<PeminjamanPage> {
                                                               () {},
                                                         ),
                                                       )
-                                                : DataCell(
-                                                    TwinkleButton(
-                                                      buttonTitle:
-                                                          Text('Ditolak'),
-                                                      buttonColor: Colors.red,
-                                                      buttonHeight: 40,
-                                                      buttonWidth: 125,
-                                                      onclickButtonFunction:
-                                                          () {},
-                                                    ),
-                                                  )
+                                                : transaksi.pkbu == 0
+                                                    ? DataCell(
+                                                        TwinkleButton(
+                                                          buttonTitle:
+                                                              Text('Ditolak'),
+                                                          buttonColor:
+                                                              Colors.red,
+                                                          buttonHeight: 40,
+                                                          buttonWidth: 125,
+                                                          onclickButtonFunction:
+                                                              () {},
+                                                        ),
+                                                      )
+                                                    : transaksi.pksbrt == 0 ||
+                                                            transaksi.pkwr2 == 0
+                                                        ? DataCell(
+                                                            TwinkleButton(
+                                                              buttonTitle: Text(
+                                                                  'Ditolak'),
+                                                              buttonColor:
+                                                                  Colors.red,
+                                                              buttonHeight: 40,
+                                                              buttonWidth: 125,
+                                                              onclickButtonFunction:
+                                                                  () {},
+                                                            ),
+                                                          )
+                                                        : DataCell(
+                                                            TwinkleButton(
+                                                              buttonTitle: Text(
+                                                                  'Belum Direspon'),
+                                                              buttonColor:
+                                                                  Colors.orange,
+                                                              buttonHeight: 40,
+                                                              buttonWidth: 125,
+                                                              onclickButtonFunction:
+                                                                  () {},
+                                                            ),
+                                                          )
                                             : DataCell(TwinkleButton(
-                                                buttonTitle:
-                                                    Text('Belum Direspon'),
-                                                buttonColor: Colors.orange,
+                                                buttonTitle: Text('Ditolak'),
+                                                buttonColor: Colors.red,
                                                 buttonHeight: 40,
                                                 buttonWidth: 125,
                                                 onclickButtonFunction: () {},
@@ -340,110 +382,142 @@ class PeminjamanPageState extends State<PeminjamanPage> {
                                             buttonWidth: 125,
                                             onclickButtonFunction: () {},
                                           )),
-                                    transaksi.konfirmasiWRid != null ||
-                                            transaksi.konfirmasiKBSDid !=
-                                                    null &&
-                                                transaksi.konfirmasiKBUid !=
-                                                    null &&
-                                                transaksi.konfirmasiKSBRTid !=
-                                                    null
-                                        ? DataCell(
-                                            Container(
-                                              width: 155,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  ElevatedButton(
-                                                    onPressed: () async {
-                                                      String path = await ExtStorage
-                                                          .getExternalStoragePublicDirectory(
-                                                              ExtStorage
-                                                                  .DIRECTORY_DOWNLOADS);
-                                                      String fullPath =
-                                                          "$path/cetak.pdf";
-                                                      cetakTransaksi(transaksi
-                                                              .id
-                                                              .toString())
-                                                          .then((value) =>
-                                                              download2(
-                                                                  dio,
-                                                                  value,
-                                                                  fullPath));
-                                                      // showDialog(
-                                                      //     context: context,
-                                                      //     builder: (BuildContext
-                                                      //         context) {
-                                                      //       return Container(
-                                                      //           child:
-                                                      //               CircularProgressIndicator(),
-                                                      //           width: 32,
-                                                      //           height: 32);
-                                                      //     });
-                                                      // Future.delayed(
-                                                      //     const Duration(
-                                                      //         seconds: 1));
+                                    transaksi.status == 1
+                                        ? DataCell(Text(""))
+                                        : transaksi.status == 2
+                                            ? DataCell(ElevatedButton(
+                                                onPressed: () => {},
+                                                child: Text("Ditolak"),
+                                              ))
+                                            : transaksi.konfirmasiWRid !=
+                                                        null ||
+                                                    transaksi
+                                                                .konfirmasiKBSDid !=
+                                                            null &&
+                                                        transaksi
+                                                                .konfirmasiKBUid !=
+                                                            null &&
+                                                        transaksi
+                                                                .konfirmasiKSBRTid !=
+                                                            null
+                                                ? DataCell(
+                                                    Container(
+                                                      width: 155,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        children: [
+                                                          ElevatedButton(
+                                                            onPressed:
+                                                                () async {
+                                                              String path = await ExtStorage
+                                                                  .getExternalStoragePublicDirectory(
+                                                                      ExtStorage
+                                                                          .DIRECTORY_DOWNLOADS);
+                                                              String fullPath =
+                                                                  "$path/cetak" +
+                                                                      transaksi
+                                                                          .id
+                                                                          .toString() +
+                                                                      ".pdf";
+                                                              cetakTransaksi(
+                                                                      transaksi
+                                                                          .id
+                                                                          .toString())
+                                                                  .then((value) =>
+                                                                      download2(
+                                                                          dio,
+                                                                          value,
+                                                                          fullPath));
+                                                              // showDialog(
+                                                              //     context: context,
+                                                              //     builder: (BuildContext
+                                                              //         context) {
+                                                              //       return Container(
+                                                              //           child:
+                                                              //               CircularProgressIndicator(),
+                                                              //           width: 32,
+                                                              //           height: 32);
+                                                              //     });
+                                                              // Future.delayed(
+                                                              //     const Duration(
+                                                              //         seconds: 1));
 
-                                                      new Future.delayed(
-                                                          const Duration(
-                                                              seconds: 10));
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(SnackBar(
-                                                              content: Text(
-                                                                  "Download Successfully")));
-                                                    },
-                                                    child: Text(
-                                                      "Cetak",
-                                                      style: TextStyle(
-                                                          color: Colors.black),
+                                                              new Future
+                                                                      .delayed(
+                                                                  const Duration(
+                                                                      seconds:
+                                                                          10));
+                                                              ScaffoldMessenger
+                                                                      .of(
+                                                                          context)
+                                                                  .showSnackBar(
+                                                                      SnackBar(
+                                                                          content:
+                                                                              Text("Download Successfully")));
+                                                            },
+                                                            child: Text(
+                                                              "Cetak",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                            style: ButtonStyle(
+                                                                backgroundColor:
+                                                                    MaterialStateProperty
+                                                                        .all(Colors
+                                                                            .white70)),
+                                                          ),
+                                                          ElevatedButton(
+                                                            onPressed: () =>
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (context) =>
+                                                                            AddKritik(
+                                                                              transaksi: transaksi,
+                                                                            ))),
+                                                            child:
+                                                                Text("Selesai"),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
-                                                    style: ButtonStyle(
-                                                        backgroundColor:
-                                                            MaterialStateProperty
-                                                                .all(Colors
-                                                                    .white70)),
-                                                  ),
-                                                  ElevatedButton(
-                                                    onPressed: () => Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                AddKritik())),
-                                                    child: Text("Selesai"),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          )
-                                        : DataCell(
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                hapusTransaksi(
-                                                        transaksi.id.toString())
-                                                    .then((value) {
-                                                  TransaksiService.getTransaksi(
+                                                  )
+                                                : DataCell(
+                                                    ElevatedButton(
+                                                      onPressed: () {
+                                                        hapusTransaksi(transaksi
+                                                                .id
+                                                                .toString())
+                                                            .then((value) {
                                                           TransaksiService
-                                                              .myUrl)
-                                                      .then((transaksi) {
-                                                    setState(() {
-                                                      _transaksi = transaksi;
-                                                    });
-                                                  });
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(SnackBar(
-                                                          content: Text(
-                                                              'Transaksi deleted successfully')));
-                                                });
-                                              },
-                                              child: Text("Batalkan"),
-                                              style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          Colors.red)),
-                                            ),
-                                          ),
+                                                                  .getTransaksi(
+                                                                      TransaksiService
+                                                                          .myUrl)
+                                                              .then(
+                                                                  (transaksi) {
+                                                            setState(() {
+                                                              _transaksi =
+                                                                  transaksi;
+                                                            });
+                                                          });
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(SnackBar(
+                                                                  content: Text(
+                                                                      'Transaksi deleted successfully')));
+                                                        });
+                                                      },
+                                                      child: Text("Batalkan"),
+                                                      style: ButtonStyle(
+                                                          backgroundColor:
+                                                              MaterialStateProperty
+                                                                  .all(Colors
+                                                                      .red)),
+                                                    ),
+                                                  ),
                                   ],
                                 ),
                               )

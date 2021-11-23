@@ -82,7 +82,9 @@ class KritikSaranPageState extends State<KritikSaranPage> {
                                 (kritiksaran) => DataRow(
                                   cells: [
                                     DataCell(
-                                      Text(kritiksaran.id.toString()),
+                                      Text((_kritiksaran.indexOf(kritiksaran) +
+                                              1)
+                                          .toString()),
                                     ),
                                     DataCell(
                                       Text(kritiksaran.namaPeminjam),

@@ -1,8 +1,12 @@
+
 import 'package:flutter/material.dart';
 import 'package:ta_sispem/blocs/auth_bloc.dart';
 import 'package:ta_sispem/model/ruangan.dart';
+import 'package:ta_sispem/repository/auth_repository.dart';
 import 'package:ta_sispem/services/servicesruangan.dart';
+import 'package:ta_sispem/url.dart';
 import 'addtransaksi.dart';
+import 'package:intl/intl.dart';
 
 import '../blocs/navigation_bloc.dart';
 
@@ -19,17 +23,32 @@ class RuanganPage extends StatefulWidget with NavigationStates {
 
 class RuanganPageState extends State<RuanganPage> {
   AuthBloc get _authBloc => widget.authBloc;
+  AuthRepository repo = AuthRepository();
+  int peminjamId;
   List<Ruangan> _ruangan;
+  DateTime _dateTime;
+  TextEditingController _tanggalMulai = TextEditingController();
 
   @override
   void initState() {
     _ruangan = [];
     super.initState();
-    RuanganService.getRuangan().then((ruangan) {
+    Future token = repo.hasToken();
+    token.then((value) => repo.getData(value).then((e) {
       setState(() {
-        _ruangan = ruangan;
+        peminjamId = e.peminjamId;
+        RuanganService.myUrl = Url.url +
+            '/api/peminjams/' +
+            peminjamId.toString() +
+            '/transaksis/';
+        RuanganService.getRuangan(RuanganService.myUrl)
+            .then((ruangan) {
+          setState(() {
+            _ruangan = ruangan;
+          });
+        });
       });
-    });
+    }));
     print(_authBloc.toString());
   }
 
@@ -46,6 +65,46 @@ class RuanganPageState extends State<RuanganPage> {
               "Semua Ruangan",
               style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
             ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 20, bottom: 10),
+              child: TextFormField(
+                onTap: () async {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                  _dateTime = await showDatePicker(
+                      context: context,
+                      initialDate:
+                      DateTime.now().subtract(Duration(days: -3)),
+                      firstDate: DateTime.now().subtract(Duration(days: -3)),
+                      lastDate: DateTime(2030));
+
+                  String date = DateFormat('yyyy-MM-dd').format(_dateTime);
+                  _tanggalMulai.text = date;
+                },
+                controller: _tanggalMulai,
+                decoration: InputDecoration(labelText: "Tanggal"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please input this field !";
+                  }
+                  return null;
+                },
+              ),
+            ),
+            ElevatedButton(onPressed: () => {
+              setState(() {
+                RuanganService.myUrl = Url.url +
+                    '/api/peminjams/' +
+                    peminjamId.toString() +
+                    '/transaksis?jenis=semua&mulai=' + _tanggalMulai.text.toString() +'&akhir=';
+                print(RuanganService.myUrl);
+                RuanganService.getRuangan(RuanganService.myUrl).then((ruangan) => {
+                  setState(() {
+                    _ruangan =
+                        ruangan;
+                  })
+                } );
+            })
+            }, child: Text('Tampilkan')),
             SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Center(
@@ -86,7 +145,8 @@ class RuanganPageState extends State<RuanganPage> {
                                 (ruangan) => DataRow(
                                   cells: [
                                     DataCell(
-                                      Text(ruangan.id.toString()),
+                                      Text((_ruangan.indexOf(ruangan) + 1)
+                                          .toString()),
                                     ),
                                     DataCell(
                                       Text(ruangan.namaRuangan),
