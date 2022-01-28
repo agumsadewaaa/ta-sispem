@@ -15,9 +15,13 @@ class Transaksi {
   String tanggalSelesai;
   int status;
   int pkwr2;
+  String pkwr2Tgl;
   int pkbu;
+  String pkbuTgl;
   int pkbsd;
+  String pkbsdTgl;
   int pksbrt;
+  String pksbrtTgl;
 
   Transaksi(
       {this.id,
@@ -36,9 +40,13 @@ class Transaksi {
       this.tanggalSelesai,
       this.status,
       this.pkwr2,
+      this.pkwr2Tgl,
       this.pkbsd,
+      this.pkbsdTgl,
       this.pkbu,
-      this.pksbrt});
+      this.pkbuTgl,
+      this.pksbrt,
+      this.pksbrtTgl});
 
   factory Transaksi.fromJson(Map<String, dynamic> json) {
     return Transaksi(
@@ -58,8 +66,12 @@ class Transaksi {
         tanggalSelesai: json['tanggal_selesai'] as String,
         status: json['status'] as int,
         pkwr2: json['pwr2_status'] as int,
+        pkwr2Tgl: json['pkwr2_tgl'] as String,
         pkbsd: json['pkbsd_status'] as int,
+        pkbsdTgl: json['pkbsd_tgl'] as String,
         pkbu: json['pkbu_status'] as int,
-        pksbrt: json['pksbrt_status'] as int);
+        pkbuTgl: json['pkbu_tgl'] as String,
+        pksbrt: json['pksbrt_status'] as int,
+        pksbrtTgl: json['pksbrt_tgl'] as String);
   }
 }

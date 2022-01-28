@@ -1,0 +1,4 @@
+#Mon Nov 29 05:48:00 ICT 2021
+base.0=C\:\\Users\\Labdas SI\\AndroidStudioProjects\\ta_sispem\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
